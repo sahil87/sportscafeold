@@ -33,6 +33,29 @@ function attachUserPosts(userPosts) {
     }
 }
 
+function getArrayOfUser(params, skip, limit fn) {
+    var options = {};
+    if(params) {
+        options = params;
+    }
+    User.find(options)
+        .lean()
+        .select('email social_details public_details created online status')
+        .skip(skip)
+        .limit(limit)
+        .exec(function(err, users) { 
+            if (err) {
+                fn(err, false);
+            } else {
+                if(users && users.length) {
+                    fn(false, users);
+                } else {
+                    fn(false, false);
+                }
+            }
+        });
+}
+
 function getUserData(params, fn) {
     User.findOne(params)
         .lean()
@@ -307,9 +330,6 @@ exports.getUserByFbId = function(req, res) {
     
 };
 
-
-
-
 /**
 * Delete user
 **/
@@ -330,6 +350,10 @@ exports.deleteUser = function(req, res) {
 
 }
 
+/**************  TEST METHODS 
+* Use the following methods
+* to test the endpoints by apache bench
+*/
 
 exports.postUserTest = function(req, res) {
     //console.log(req.body);
