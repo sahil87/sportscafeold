@@ -1,8 +1,8 @@
 var GCMPusher    = require('./GCMPusher'),
     APNSPusher   = require('./APNPusher'),
     async = require('async'),
-    Device = require('../Model/Device'),
-    User = require('../Model/User');
+    Device = require('../Models/Device'),
+    User = require('../Models/User');
 
 
 exports.sendNotifications = function(notifyMessage, soundName, userId) {

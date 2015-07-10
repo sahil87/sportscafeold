@@ -1,5 +1,5 @@
 
-var queryParser = require('../Plugin/QueryParser');
+var queryParser = require('../Plugins/QueryParser');
 
 module.exports = function (req, res, next) {
     if (req.query._q) {

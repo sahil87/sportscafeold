@@ -3,10 +3,10 @@
 **/
 var express     = require('express'),
     Passport    = require('passport'),
-    Auth        = require('./Component/Auth'),
-    User        = require('./Controller/UsersController'),
-    Device      = require('./Controller/DevicesController'),
-    queryParser = require('./Component/QueryParser'),
+    Auth        = require('./Components/Auth'),
+    User        = require('./Controllers/UsersController'),
+    Device      = require('./Controllers/DevicesController'),
+    queryParser = require('./Components/QueryParser'),
     multiparty = require('connect-multiparty'),
     multipartyMiddleware = multiparty(),
     server         = express();
@@ -56,9 +56,11 @@ router.route('/devices/test') // takes created as query param if needed
 
 
 
+/***  TEST DIALERS ****/
 
 
-
+router.route('/test/users/post')
+  .get(Auth.isAuthenticated, User.postUserTest);
 
 
 

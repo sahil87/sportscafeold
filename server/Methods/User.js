@@ -7,8 +7,8 @@ async = require('async'),
     _ = require('underscore');
 
 /** Load models **/
-var User  = require('../Model/User'),
-    Device  = require('../Model/Device');
+var User  = require('../Models/User'),
+    Device  = require('../Models/Device');
 
 
 

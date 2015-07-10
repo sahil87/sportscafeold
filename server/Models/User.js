@@ -14,11 +14,11 @@ var mongoose = require('mongoose'),
 var Device = require('./Device');
 
 var UserSchema = new Schema({
-    username: {
+    username: {  //Only used Admin
         type: String, 
         default: ''
     },
-    password: {
+    password: { //Only used Admin
         type: String,
         default: ''
     },

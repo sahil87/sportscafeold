@@ -6,13 +6,13 @@ module.exports = {
             dbName: 'fondoo'
         },
         remote: {
-            host: 'remote.host',
+            host: 'ds047592.mongolab.com:47592',
             port: 27017,
-            dbName: 'remote-dbname',
+            dbName: 'sportscafe',
             options: {
                 //TODO change credentials
-                username: 'remote-user',
-                password: 'remote-pass'
+                username: 'mithunSC',
+                password: 'Congo'
             }
         }
     },

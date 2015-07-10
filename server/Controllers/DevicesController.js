@@ -8,13 +8,13 @@ var async = require('async'),
 
 /** Load components **/
 
-var GCMPusher    = require('../Component/GCMPusher'),
-    APNSPusher   = require('../Component/APNPusher');
+var GCMPusher    = require('../Components/GCMPusher'),
+    APNSPusher   = require('../Components/APNPusher');
 
 /** Load models **/
 
-var User = require('../Model/User'),
-    Device = require('../Model/Device');
+var User = require('../Models/User'),
+    Device = require('../Models/Device');
 
 // Create endpoint /user/:userId/blocks for POST
 exports.registerDevice = function(req, res) {
