@@ -52,9 +52,8 @@ server.use(passport.initialize());
 
 /*** SET UP ANGULAR FRONT END ***/
 
-server.get('/', function (req, res) {
-  res.sendfile(__dirname + '/client/index.html');
-});
+app.use(express.static(path.join(__dirname, '../client/app')));
+
 
 /** Router file declaration **/
 var router = require('./server/routers');

@@ -33,7 +33,7 @@ function attachUserPosts(userPosts) {
     }
 }
 
-function getArrayOfUser(params, skip, limit fn) {
+function getArrayOfUser(params, skip, limit, fn) {
     var options = {};
     if(params) {
         options = params;
