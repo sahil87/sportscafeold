@@ -1,3 +1,7 @@
+/**
+* Cloudinary Image handling component
+*/
+
 var cloudinary = require('cloudinary'),
 	Config = require('../Config/Config'); //Config loaded 
 

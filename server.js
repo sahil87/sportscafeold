@@ -32,7 +32,7 @@ mongoose.connect(getConnectionString(db), function (err) {
         console.log(err);
         return;
     }
-    //console.log('Started fondoo database');
+    console.log('Started sportscafe database');
 });
 
 

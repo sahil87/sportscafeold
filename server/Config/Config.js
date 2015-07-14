@@ -35,10 +35,10 @@ module.exports = {
        defaultFromAddress: 'First Last <test@examle.com>'
     },
     cloudinary: {
-        //setttings for the multer options
-        cloud_name: 'cloud-name', 
-        api_key: 'api-key-here', 
-        api_secret: 'api-secret-here' 
+        //setttings for the cloudinary options
+        cloud_name: 'jumacro-software-systems-pvt-ltd', 
+        api_key: '165614874531362', 
+        api_secret: 'N5Vj6Fn5e_ADKau0XgHfqvXOg-g' 
     },
     gcm: {
         apiKey: "GCM-Api-key-here"
