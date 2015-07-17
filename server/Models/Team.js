@@ -22,16 +22,6 @@ var TeamSchema = new Schema({
         type: String,
         default: ''
     },
-    matches: [
-        { 
-            type: ObjectId, ref: 'Match' 
-        }
-    ],
-    players: [
-        { 
-            type: ObjectId, ref: 'TeamPlayer' 
-        }
-    ],
     status              : {
         type: Boolean,
         default: true

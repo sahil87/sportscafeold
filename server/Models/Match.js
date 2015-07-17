@@ -28,11 +28,6 @@ var MatchSchema = new Schema({
         required: true,
         ref: 'Team'
     }, 
-    results: [
-        { 
-            type: ObjectId, ref: 'MatchResult' 
-        }
-    ],
     matchDate             : {
         type: Date,
         required: true
