@@ -1,5 +1,5 @@
 /**
-Team controller
+Player controller
 */
 
 /** Load modules **/
@@ -7,26 +7,25 @@ async = require('async'),
     _ = require('underscore');
 
 /** Load models **/
-var Team  = require('../Models/Team'),
-    Player  = require('../Models/TeamPlayer');
+var Player  = require('../Models/Player');
 
 
 
-function getArrayOfTeam(params, skip, limit, fn) {
+function getArrayOfPlayer(params, skip, limit, fn) {
     var options = {};
     if(params) {
         options = params;
     }
-    Team.find(options)
+    Player.find(options)
         .lean()
         .skip(skip)
         .limit(limit)
-        .exec(function(err, teams) { 
+        .exec(function(err, players) { 
             if (err) {
                 fn(err, false);
             } else {
-                if(teams && teams.length) {
-                    fn(false, teams);
+                if(players && players.length) {
+                    fn(false, players);
                 } else {
                     fn(false, false);
                 }
@@ -34,18 +33,18 @@ function getArrayOfTeam(params, skip, limit, fn) {
         });
 }
 
-function getTeamData(params, fn) {
-    Team.findOne(params)
+function getPlayerData(params, fn) {
+    Player.findOne(params)
         .lean()
-        .exec(function(err, team) {
+        .exec(function(err, player) {
             if(err) {
                 console.log(err);
                 fn(err, false);
             } else {
-                if(!team) {
+                if(!player) {
                     fn(false, false);
                 } else {
-                    fn(false, team);                                             
+                    fn(false, player);                                             
                 }
             }
         });
@@ -54,34 +53,34 @@ function getTeamData(params, fn) {
 
 
 /**
-* Team post
+* Player post
 */
 
-function teamPost(params, fn) {
+function playerPost(params, fn) {
     
-    Team.insert(params, function(err, team) {
+    Player.insert(params, function(err, player) {
         if(err) {
             console.log(err);
             fn(err, false);
         } else {
-            fn(false, team);            
+            fn(false, player);            
         }
     });
 }
 
-function teamUpdate(teamId, params, fn){    
+function playerUpdate(playerId, params, fn){    
 
     var options = {
         upsert: true
     }
     //console.log(params);
-    Team.findByIdAndUpdate(teamId, params, options, function(err, team) {
+    Player.findByIdAndUpdate(playerId, params, options, function(err, player) {
             if(err) {
                 console.log(err);
                 fn(err, false);
             } else {
-                if(team) {
-                    fn(false, team);
+                if(player) {
+                    fn(false, player);
                 } else {
                     fn(false, false);
                 }
@@ -101,21 +100,21 @@ function teamUpdate(teamId, params, fn){
 
 
 
-/** Team CRUD **/
+/** Player CRUD **/
 
 /**
-* Post teams
+* Post players
 **/
-exports.postTeames = function(req, res) {
+exports.postPlayeres = function(req, res) {
     //console.log(req.body);
     var params = req.body;
-    teamPost(params, function(err, team) {
+    playerPost(params, function(err, player) {
         if(err) {
             console.log(err);
             res.status(500).json(err);
         } else {
-            if(team) {
-                res.status(201).json(team);
+            if(player) {
+                res.status(201).json(player);
             } else {
                 res.status(204).json(null);
             }
@@ -127,9 +126,9 @@ exports.postTeames = function(req, res) {
 
 
 /**
-* Get all teams
+* Get all players
 **/
-exports.getTeames = function(req, res) {
+exports.getPlayeres = function(req, res) {
     var skip = 0;
     var limit = 50;
 
@@ -140,39 +139,39 @@ exports.getTeames = function(req, res) {
     if(req.query.limit) {
         limit = req.query.limit;
     }
-    Team.find({})
+    Player.find({})
         .lean()
         .skip(skip)
         .limit(limit)
-        .exec(function(err, teams) { 
+        .exec(function(err, players) { 
             if (err) {
                 res.status(500).json(err);
             } else {
-                if(teams && teams.length) {
-                    res.status(200).json(teams);
+                if(players && players.length) {
+                    res.status(200).json(players);
                 } else {
-                    res.status(204).json(teams);
+                    res.status(204).json(players);
                 }
             }
         });
 };
 
 /**
-* Get a single team by id
+* Get a single player by id
 **/
-exports.getTeam = function(req, res) {
+exports.getPlayer = function(req, res) {
 
-    var teamId = req.params.id;
-    var params = { _id: teamId };
-    getTeamData(params, function(err, team) {
+    var playerId = req.params.id;
+    var params = { _id: playerId };
+    getPlayerData(params, function(err, player) {
         if(err) {
             console.log(err);
             res.status(500).json(err);
         } else {
-            if(team) {
-                res.status(200).json(team);
+            if(player) {
+                res.status(200).json(player);
             } else {
-                res.status(204).json(team);
+                res.status(204).json(player);
             }
         }
     });
@@ -182,19 +181,18 @@ exports.getTeam = function(req, res) {
 
 
 /**
-* Delete team
+* Delete player
 **/
-exports.deleteTeam = function(req, res) {
-    var teamId = req.params.id;
+exports.deletePlayer = function(req, res) {
+    var playerId = req.params.id;
 
-    Team.remove({ _id: teamId }).exec(function(err) {
+    Player.remove({ _id: playerId }).exec(function(err) {
         if(err) {
-            console.log("Found problem, TeamsController L783");
+            console.log("Found problem, PlayersController L783");
             console.log(err);
             res.status(500).json(err);
         } else {
-            Player.remove({_teamId: teamId}).exec();
-            res.json({ message: 'Team is deleted!' });
+            res.json({ message: 'Player is deleted!' });
         }
     });
 }

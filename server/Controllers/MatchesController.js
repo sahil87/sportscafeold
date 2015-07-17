@@ -7,7 +7,9 @@ async = require('async'),
     _ = require('underscore');
 
 /** Load models **/
-var MatchResult  = require('../Models/MatchResult');
+var Match  = require('../Models/Match'),
+    Result  = require('../Models/MatchResult'),
+    Raid  = require('../Models/Raid');
 
 
 
@@ -192,7 +194,8 @@ exports.deleteMatch = function(req, res) {
             console.log(err);
             res.status(500).json(err);
         } else {
-            Device.remove({_matchId: matchId}).exec();
+            Result.remove({ _matchId: matchId });
+            Raid.remove({ _matchId: matchId });
             res.json({ message: 'Match is deleted!' });
         }
     });
