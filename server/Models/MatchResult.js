@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
     Schema   = mongoose.Schema,
     ObjectId = Schema.ObjectId;
 
+var Raid = require('./Raid');
 
 
 var ResultsSchema = new Schema({
@@ -43,7 +44,7 @@ var ResultsSchema = new Schema({
 ResultsSchema.pre('remove', function(next) {
     // 'this' is the client being removed. Provide callbacks here if you want
     // to be notified of the calls' result.
-    ResultsResult.remove({_resultId: this._id}).exec();
+    Raid.remove({_resultId: this._id}).exec();
     next();
 });
 

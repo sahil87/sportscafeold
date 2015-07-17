@@ -1,5 +1,5 @@
 /**
-* Raids schema
+* Raid schema
 * Stores the registered raid data
 * Copyright(c) 2015 Virgin Labs
 */
@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
 
 
 
-var RaidsSchema = new Schema({
+var RaidSchema = new Schema({
     _resultId: {
         type: ObjectId,
         required: true,
@@ -62,26 +62,16 @@ var RaidsSchema = new Schema({
 });
 
 
-
-
-
-RaidsSchema.pre('remove', function(next) {
-    // 'this' is the client being removed. Provide callbacks here if you want
-    // to be notified of the calls' raid.
-    RaidsRaid.remove({_raidId: this._id}).exec();
-    next();
-});
-
 /** 
 Schema method to add User by passed params
 **/
-RaidsSchema.statics.insert = function(params, callback) {
+RaidSchema.statics.insert = function(params, callback) {
     delete params.photos;
-    var newRaids = {};
+    var newRaid = {};
     for (prop in params) {
-        newRaids[prop] = params[prop];
+        newRaid[prop] = params[prop];
     }
-    var raid = new this(newRaids);
+    var raid = new this(newRaid);
     raid.save(function(err, raid) {
         if (err) {
             callback(err, false);
@@ -93,4 +83,4 @@ RaidsSchema.statics.insert = function(params, callback) {
     });
 
 };
-module.exports = mongoose.model('Raids', RaidsSchema);
+module.exports = mongoose.model('Raid', RaidSchema);

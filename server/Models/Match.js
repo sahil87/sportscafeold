@@ -11,7 +11,8 @@ var mongoose = require('mongoose'),
 
 //var relative tables
 
-var MatchResult = require('./MatchResult');
+var Result = require('./MatchResult'),
+    Raid = require('./Raid');
 
 var MatchSchema = new Schema({
     matchTitle: {
@@ -53,7 +54,8 @@ var MatchSchema = new Schema({
 MatchSchema.pre('remove', function(next) {
     // 'this' is the client being removed. Provide callbacks here if you want
     // to be notified of the calls' result.
-    MatchResult.remove({_matchId: this._id}).exec();
+    Result.remove({_matchId: this._id}).exec();
+    Raid.remove({_matchId: this._id}).exec();
     next();
 });
 
