@@ -17,7 +17,7 @@
         $stateProvider
           .state('/', {
             url: '/',
-            templateUrl: 'views/Home/index.html',
+            templateUrl: 'views/Score/scorer.html',
             controller: 'HomeController'
           })
           .state('scorer', {
