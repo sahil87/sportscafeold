@@ -12,11 +12,6 @@ var mongoose = require('mongoose'),
 
 
 var RaidSchema = new Schema({
-    _resultId: {
-        type: ObjectId,
-        required: true,
-        ref: 'Result'
-    },
     _matchId: {
         type: ObjectId,
         required: true,

@@ -16,7 +16,6 @@ angular
       $scope.handleFormSubmit = function() {
           var inputObj = {
             _matchId: "123456",
-            _resultId: "123456",
             _raiderTeam: "123456",
             _raiderId: "123456",
             touches: ['123', '123'],
