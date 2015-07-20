@@ -15,8 +15,6 @@ function logError(err, lineNum){
     console.error(err);
 }
 
-
-
 function getArrayOfTeams(params, skip, limit, fn) {
     var options = {};
     if(params) {

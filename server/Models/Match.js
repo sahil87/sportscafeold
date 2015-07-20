@@ -15,10 +15,6 @@ var Result = require('./MatchResult'),
     Raid = require('./Raid');
 
 var MatchSchema = new Schema({
-    matchTitle: {
-        type: String,
-        default : ''
-    },
     _teamA: {
         type: ObjectId,
         required: true,
@@ -31,7 +27,7 @@ var MatchSchema = new Schema({
     }, 
     matchDate             : {
         type: Date,
-        required: true
+        default: Date.now
     },
     status              : {
         type: Boolean,

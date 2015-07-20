@@ -9,9 +9,12 @@ async = require('async'),
 /** Load models **/
 var Raid  = require('../Models/Raid');
 
+function logError(err, lineNum){
+    console.log("Problem in TeamsControler L" + lineNum);
+    console.error(err);
+}
 
-
-function getArrayOfRaid(params, skip, limit, fn) {
+function getArrayOfRaids(params, skip, limit, fn) {
     var options = {};
     if(params) {
         options = params;
@@ -22,6 +25,7 @@ function getArrayOfRaid(params, skip, limit, fn) {
         .limit(limit)
         .exec(function(err, raids) { 
             if (err) {
+                logError(err, 28);
                 fn(err, false);
             } else {
                 if(raids && raids.length) {
@@ -38,7 +42,7 @@ function getRaidData(params, fn) {
         .lean()
         .exec(function(err, raid) {
             if(err) {
-                console.log(err);
+                logError(err, 45);
                 fn(err, false);
             } else {
                 if(!raid) {
@@ -60,7 +64,7 @@ function raidPost(params, fn) {
     
     Raid.insert(params, function(err, raid) {
         if(err) {
-            console.log(err);
+            logError(err, 67);
             fn(err, false);
         } else {
             fn(false, raid);            
@@ -76,7 +80,7 @@ function raidUpdate(raidId, params, fn){
     //console.log(params);
     Raid.findByIdAndUpdate(raidId, params, options, function(err, raid) {
             if(err) {
-                console.log(err);
+                logError(err, 83);
                 fn(err, false);
             } else {
                 if(raid) {
@@ -105,7 +109,7 @@ function raidUpdate(raidId, params, fn){
 /**
 * Post raids
 **/
-exports.postRaids = function(req, res) {
+exports.add = function(req, res) {
     //console.log(req.body);
     var params = req.body;
     raidPost(params, function(err, raid) {
@@ -128,7 +132,7 @@ exports.postRaids = function(req, res) {
 /**
 * Get all raids
 **/
-exports.getRaids = function(req, res) {
+exports.getAll = function(req, res) {
     var skip = 0;
     var limit = 50;
 
@@ -139,27 +143,25 @@ exports.getRaids = function(req, res) {
     if(req.query.limit) {
         limit = req.query.limit;
     }
-    Raid.find({})
-        .lean()
-        .skip(skip)
-        .limit(limit)
-        .exec(function(err, raids) { 
-            if (err) {
-                res.status(500).json(err);
+    var params = false;
+
+    getArrayOfRaids(params, skip, limit, function(err, raids) {
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            if(raids && raids.length) {
+                res.status(200).json(raids);
             } else {
-                if(raids && raids.length) {
-                    res.status(200).json(raids);
-                } else {
-                    res.status(204).json(raids);
-                }
+                res.status(204).json(raids);
             }
-        });
+        }
+    });
 };
 
 /**
 * Get a single raid by id
 **/
-exports.getRaid = function(req, res) {
+exports.getOne = function(req, res) {
 
     var raidId = req.params.id;
     var params = { _id: raidId };
@@ -178,18 +180,38 @@ exports.getRaid = function(req, res) {
     
 };
 
+/**
+* Get a single raid by id
+**/
+exports.getRaidsByMatch = function(req, res) {
+
+    var matchId = req.params.matchId;
+    var params = { _matchId: matchId };
+    getRaidsByMatch(params, function(err, raids) {
+        if(err) {
+            res.status(500).json(err);
+        } else {
+            if(player) {
+                res.status(200).json(raids);
+            } else {
+                res.status(204).json(null);
+            }
+        }
+    });
+    
+};
+
 
 
 /**
 * Delete raid
 **/
-exports.deleteRaid = function(req, res) {
+exports.deleteOne = function(req, res) {
     var raidId = req.params.id;
 
     Raid.remove({ _id: raidId }).exec(function(err) {
         if(err) {
-            console.log("Found problem, RaidsController L783");
-            console.log(err);
+            logError(err, 193);
             res.status(500).json(err);
         } else {
             res.json({ message: 'Raid is deleted!' });

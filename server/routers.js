@@ -8,6 +8,9 @@ var express     = require('express'),
     Device      = require('./Controllers/DevicesController'),
     Team      = require('./Controllers/TeamsController'),
     Player      = require('./Controllers/PlayersController'),
+    Match      = require('./Controllers/MatchesController'),
+    Result      = require('./Controllers/ResultsController'),
+    Raid      = require('./Controllers/RaidsController'),
     queryParser = require('./Components/QueryParser'),
     multiparty = require('connect-multiparty'),
     multipartyMiddleware = multiparty(),
@@ -82,6 +85,34 @@ router.route('/players/:id') // takes created as query param if needed
 
 router.route('/teams/:teamId/players') // takes created as query param if needed
   .post(Auth.isAuthenticated, Player.getPlayersByTeam);
+
+
+/********** Match resource ***********/
+
+router.route('/matches') // takes created as query param if needed
+  .post(Auth.isAuthenticated, Match.add)
+  .get(Auth.isAuthenticated, Match.getAll);
+
+
+router.route('/matches/:id') // takes created as query param if needed
+  .get(Auth.isAuthenticated, Match.getOne)
+  //.put(Auth.isAuthenticated, Match.edit)
+  .delete(Auth.isAuthenticated, Match.deleteOne);
+
+/************ Raid resource ****************/
+
+router.route('/raids') // takes created as query param if needed
+  .post(Auth.isAuthenticated, Raid.add)
+  .get(Auth.isAuthenticated, Raid.getAll);
+
+
+router.route('/raids/:id') // takes created as query param if needed
+  .get(Auth.isAuthenticated, Raid.getOne)
+  //.put(Auth.isAuthenticated, Raid.edit)
+  .delete(Auth.isAuthenticated, Raid.deleteOne);
+
+router.route('/matches/:teamId/raids') // takes created as query param if needed
+  .post(Auth.isAuthenticated, Raid.getRaidsByMatch);
 
 
 

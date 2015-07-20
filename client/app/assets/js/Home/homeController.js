@@ -14,25 +14,16 @@ angular
       $rootScope.isScorerCss = true;
 
       $scope.handleFormSubmit = function() {
-        var inputObj = {
-          _matchId: "123456",
-          _resultId: "123456",
-          _raiderTeam: "123456",
-          _raiderId: "123456",
-          touches: ['123', '123'],
-          _tackledBy: "123456",
-          _dataEntryPerson: "123456"
-        };
-          console.log(inputObj);
-          PubSub.submitData(
-            'MatchResult',
-            {
-              "matchId": 123,
-              "_resultId": 1234
-            },
-            onMatchResultCreate
-          );
-
+          var inputObj = {
+            _matchId: "123456",
+            _resultId: "123456",
+            _raiderTeam: "123456",
+            _raiderId: "123456",
+            touches: ['123', '123'],
+            _tackledBy: "123456",
+            _dataEntryPerson: "123456"
+          };
+          PubSub.submitData('submitResult', inputObj, onMatchResultCreate);
       }
 
       $scope.Raid;

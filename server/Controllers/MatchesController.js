@@ -11,9 +11,13 @@ var Match  = require('../Models/Match'),
     Result  = require('../Models/MatchResult'),
     Raid  = require('../Models/Raid');
 
+function logError(err, lineNum){
+    console.log("Problem in TeamsControler L" + lineNum);
+    console.error(err);
+}
 
 
-function getArrayOfMatch(params, skip, limit, fn) {
+function getArrayOfMatches(params, skip, limit, fn) {
     var options = {};
     if(params) {
         options = params;
@@ -24,6 +28,7 @@ function getArrayOfMatch(params, skip, limit, fn) {
         .limit(limit)
         .exec(function(err, matches) { 
             if (err) {
+                logError(err, 31);
                 fn(err, false);
             } else {
                 if(matches && matches.length) {
@@ -40,7 +45,7 @@ function getMatchData(params, fn) {
         .lean()
         .exec(function(err, match) {
             if(err) {
-                console.log(err);
+               logError(err, 48);
                 fn(err, false);
             } else {
                 if(!match) {
@@ -62,7 +67,7 @@ function matchPost(params, fn) {
     
     Match.insert(params, function(err, match) {
         if(err) {
-            console.log(err);
+            logError(err, 70);
             fn(err, false);
         } else {
             fn(false, match);            
@@ -78,7 +83,7 @@ function matchUpdate(matchId, params, fn){
     //console.log(params);
     Match.findByIdAndUpdate(matchId, params, options, function(err, match) {
             if(err) {
-                console.log(err);
+                logError(err, 86);
                 fn(err, false);
             } else {
                 if(match) {
@@ -107,12 +112,11 @@ function matchUpdate(matchId, params, fn){
 /**
 * Post matches
 **/
-exports.postMatches = function(req, res) {
+exports.add = function(req, res) {
     //console.log(req.body);
     var params = req.body;
     matchPost(params, function(err, match) {
         if(err) {
-            console.log(err);
             res.status(500).json(err);
         } else {
             if(match) {
@@ -130,7 +134,7 @@ exports.postMatches = function(req, res) {
 /**
 * Get all matches
 **/
-exports.getMatches = function(req, res) {
+exports.getAll = function(req, res) {
     var skip = 0;
     var limit = 50;
 
@@ -141,33 +145,29 @@ exports.getMatches = function(req, res) {
     if(req.query.limit) {
         limit = req.query.limit;
     }
-    Match.find({})
-        .lean()
-        .skip(skip)
-        .limit(limit)
-        .exec(function(err, matches) { 
-            if (err) {
-                res.status(500).json(err);
+    var params = false;
+    getArrayOfMatches(params, skip, limit, function(err, matches){
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            if(matches && matches.length) {
+                res.status(200).json(matches);
             } else {
-                if(matches && matches.length) {
-                    res.status(200).json(matches);
-                } else {
-                    res.status(204).json(matches);
-                }
+                res.status(204).json(null);
             }
-        });
+        }
+    });
 };
 
 /**
 * Get a single match by id
 **/
-exports.getMatch = function(req, res) {
+exports.getOne = function(req, res) {
 
     var matchId = req.params.id;
     var params = { _id: matchId };
     getMatchData(params, function(err, match) {
         if(err) {
-            console.log(err);
             res.status(500).json(err);
         } else {
             if(match) {
@@ -185,13 +185,12 @@ exports.getMatch = function(req, res) {
 /**
 * Delete match
 **/
-exports.deleteMatch = function(req, res) {
+exports.deleteOne = function(req, res) {
     var matchId = req.params.id;
 
     Match.remove({ _id: matchId }).exec(function(err) {
         if(err) {
-            console.log("Found problem, MatchsController L783");
-            console.log(err);
+            logError(err, 193);
             res.status(500).json(err);
         } else {
             Result.remove({ _matchId: matchId });
