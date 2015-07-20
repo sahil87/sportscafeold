@@ -7,11 +7,11 @@ async = require('async'),
     _ = require('underscore');
 
 /** Load models **/
-var Player  = require('../Models/Player');
+var Player  = require('../Models/TeamPlayer');
 
 
 
-function getArrayOfPlayer(params, skip, limit, fn) {
+function getArrayOfPlayers(params, skip, limit, fn) {
     var options = {};
     if(params) {
         options = params;
@@ -105,10 +105,32 @@ function playerUpdate(playerId, params, fn){
 /**
 * Post players
 **/
-exports.postPlayeres = function(req, res) {
+exports.add = function(req, res) {
     //console.log(req.body);
     var params = req.body;
     playerPost(params, function(err, player) {
+        if(err) {
+            console.log(err);
+            res.status(500).json(err);
+        } else {
+            if(player) {
+                res.status(201).json(player);
+            } else {
+                res.status(204).json(null);
+            }
+            
+        }
+    });
+};
+
+/**
+* Edit players
+**/
+exports.edit = function(req, res) {
+    //console.log(req.body);
+    var playerId = req.params.id;
+    var params = req.body;
+    playerUpdate(playerId, params, function(err, player) {
         if(err) {
             console.log(err);
             res.status(500).json(err);
@@ -128,7 +150,7 @@ exports.postPlayeres = function(req, res) {
 /**
 * Get all players
 **/
-exports.getPlayeres = function(req, res) {
+exports.getAll = function(req, res) {
     var skip = 0;
     var limit = 50;
 
@@ -139,30 +161,49 @@ exports.getPlayeres = function(req, res) {
     if(req.query.limit) {
         limit = req.query.limit;
     }
-    Player.find({})
-        .lean()
-        .skip(skip)
-        .limit(limit)
-        .exec(function(err, players) { 
-            if (err) {
-                res.status(500).json(err);
+    var params = false;
+    getArrayOfPlayers(params, skip, limit, function(err, players){
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            if(players && players.length) {
+                res.status(200).json(players);
             } else {
-                if(players && players.length) {
-                    res.status(200).json(players);
-                } else {
-                    res.status(204).json(players);
-                }
+                res.status(204).json(null);
             }
-        });
+        }
+    });
 };
 
 /**
 * Get a single player by id
 **/
-exports.getPlayer = function(req, res) {
+exports.getOne = function(req, res) {
 
     var playerId = req.params.id;
     var params = { _id: playerId };
+    getPlayerData(params, function(err, player) {
+        if(err) {
+            console.log(err);
+            res.status(500).json(err);
+        } else {
+            if(player) {
+                res.status(200).json(player);
+            } else {
+                res.status(204).json(player);
+            }
+        }
+    });
+    
+};
+
+/**
+* Get a single player by id
+**/
+exports.getPlayersByTeam = function(req, res) {
+
+    var teamId = req.params.teamId;
+    var params = { _teamId: teamId };
     getPlayerData(params, function(err, player) {
         if(err) {
             console.log(err);
@@ -183,7 +224,7 @@ exports.getPlayer = function(req, res) {
 /**
 * Delete player
 **/
-exports.deletePlayer = function(req, res) {
+exports.deleteOne = function(req, res) {
     var playerId = req.params.id;
 
     Player.remove({ _id: playerId }).exec(function(err) {

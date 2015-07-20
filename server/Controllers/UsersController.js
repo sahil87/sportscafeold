@@ -24,14 +24,7 @@ function ageGetter(birthday) {
     return age;
 }
 
-function attachUserPosts(userPosts) {
-    if(userPosts) {
-        if(userPosts.length) {
-            var lastIndex = userPosts[userPosts.length - 1];
-            var lastPostId = userPosts[lastIndex];
-        }
-    }
-}
+
 
 function getArrayOfUser(params, skip, limit, fn) {
     var options = {};

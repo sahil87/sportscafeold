@@ -11,14 +11,12 @@ var mongoose = require('mongoose'),
 
 //var relative tables
 
-var PlayerPlayer = require('./PlayerPlayer');
-
 var PlayerSchema = new Schema({
-    first_name: {  //Only used Admin
+    first_name: {  
         type: String, 
-        default: ''
+        required: true
     },
-    last_name: {  //Only used Admin
+    last_name: {  
         type: String, 
         default: ''
     },

@@ -11,26 +11,26 @@ var mongoose = require('mongoose'),
 
 //var relative tables
 
-var TeamPlayer = require('./TeamPlayer');
+var Player = require('./TeamPlayer');
 
 var TeamSchema = new Schema({
-    teamTitle: {  //Only used Admin
+    teamTitle: {  
         type: String, 
-        default: ''
+        required: true
     },
-    teamLogo: { //Only used Admin
+    teamLogo: { 
         type: String,
         default: ''
     },
-    status              : {
+    status: {
         type: Boolean,
         default: true
     },
-    created             : {
+    created: {
         type: Date,
         default: Date.now
     },
-    modified            : {
+    modified: {
         type: Date,
         default: Date.now
     }
@@ -43,7 +43,7 @@ var TeamSchema = new Schema({
 TeamSchema.pre('remove', function(next) {
     // 'this' is the client being removed. Provide callbacks here if you want
     // to be notified of the calls' result.
-    TeamPlayer.remove({_teamId: this._id}).exec();
+    Player.remove({_teamId: this._id}).exec();
     next();
 });
 
@@ -51,7 +51,6 @@ TeamSchema.pre('remove', function(next) {
 Schema method to add Team by passed params
 **/
 TeamSchema.statics.insert = function(params, callback) {
-    delete params.photos;
     var newTeam = {};
     for (prop in params) {
         newTeam[prop] = params[prop];
@@ -61,10 +60,8 @@ TeamSchema.statics.insert = function(params, callback) {
         if (err) {
             callback(err, false);
         } else {
-            callback(false, team)
-
+            callback(false, team);
         }
-
     });
 
 };

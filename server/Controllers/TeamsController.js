@@ -10,9 +10,14 @@ async = require('async'),
 var Team  = require('../Models/Team'),
     Player  = require('../Models/TeamPlayer');
 
+function logError(err, lineNum){
+    console.log("Problem in TeamsControler L" + lineNum);
+    console.error(err);
+}
 
 
-function getArrayOfTeam(params, skip, limit, fn) {
+
+function getArrayOfTeams(params, skip, limit, fn) {
     var options = {};
     if(params) {
         options = params;
@@ -23,6 +28,7 @@ function getArrayOfTeam(params, skip, limit, fn) {
         .limit(limit)
         .exec(function(err, teams) { 
             if (err) {
+                logError(err, 31);
                 fn(err, false);
             } else {
                 if(teams && teams.length) {
@@ -39,7 +45,7 @@ function getTeamData(params, fn) {
         .lean()
         .exec(function(err, team) {
             if(err) {
-                console.log(err);
+                logError(err, 48);
                 fn(err, false);
             } else {
                 if(!team) {
@@ -61,7 +67,7 @@ function teamPost(params, fn) {
     
     Team.insert(params, function(err, team) {
         if(err) {
-            console.log(err);
+            logError(err, 70);
             fn(err, false);
         } else {
             fn(false, team);            
@@ -77,7 +83,7 @@ function teamUpdate(teamId, params, fn){
     //console.log(params);
     Team.findByIdAndUpdate(teamId, params, options, function(err, team) {
             if(err) {
-                console.log(err);
+                logError(err, 86);
                 fn(err, false);
             } else {
                 if(team) {
@@ -106,10 +112,33 @@ function teamUpdate(teamId, params, fn){
 /**
 * Post teams
 **/
-exports.postTeames = function(req, res) {
+exports.add = function(req, res) {
     //console.log(req.body);
     var params = req.body;
     teamPost(params, function(err, team) {
+        if(err) {
+            console.log(err);
+            res.status(500).json(err);
+        } else {
+            if(team) {
+                res.status(201).json(team);
+            } else {
+                res.status(204).json(null);
+            }
+            
+        }
+    });
+};
+
+
+/**
+* Edit teams
+**/
+exports.edit = function(req, res) {
+    //console.log(req.body);
+    var teamId = req.params.id;
+    var params = req.body;
+    teamUpdate(teamId, params, function(err, team) {
         if(err) {
             console.log(err);
             res.status(500).json(err);
@@ -129,7 +158,7 @@ exports.postTeames = function(req, res) {
 /**
 * Get all teams
 **/
-exports.getTeames = function(req, res) {
+exports.getAll = function(req, res) {
     var skip = 0;
     var limit = 50;
 
@@ -140,27 +169,24 @@ exports.getTeames = function(req, res) {
     if(req.query.limit) {
         limit = req.query.limit;
     }
-    Team.find({})
-        .lean()
-        .skip(skip)
-        .limit(limit)
-        .exec(function(err, teams) { 
-            if (err) {
-                res.status(500).json(err);
+    var params = false;
+    getArrayOfTeams(params, skip, limit, function(err, teams) {
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            if(teams && teams.length) {
+                res.status(200).json(teams);
             } else {
-                if(teams && teams.length) {
-                    res.status(200).json(teams);
-                } else {
-                    res.status(204).json(teams);
-                }
+                res.status(204).json(null);
             }
-        });
+        }
+    });
 };
 
 /**
 * Get a single team by id
 **/
-exports.getTeam = function(req, res) {
+exports.getOne = function(req, res) {
 
     var teamId = req.params.id;
     var params = { _id: teamId };
@@ -184,13 +210,12 @@ exports.getTeam = function(req, res) {
 /**
 * Delete team
 **/
-exports.deleteTeam = function(req, res) {
+exports.deleteOne = function(req, res) {
     var teamId = req.params.id;
 
     Team.remove({ _id: teamId }).exec(function(err) {
         if(err) {
-            console.log("Found problem, TeamsController L783");
-            console.log(err);
+            logError(err, 217);
             res.status(500).json(err);
         } else {
             Player.remove({_teamId: teamId}).exec();

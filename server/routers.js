@@ -6,6 +6,8 @@ var express     = require('express'),
     Auth        = require('./Components/Auth'),
     User        = require('./Controllers/UsersController'),
     Device      = require('./Controllers/DevicesController'),
+    Team      = require('./Controllers/TeamsController'),
+    Player      = require('./Controllers/PlayersController'),
     queryParser = require('./Components/QueryParser'),
     multiparty = require('connect-multiparty'),
     multipartyMiddleware = multiparty(),
@@ -50,9 +52,36 @@ router.route('/users/:userId/devices')
 router.route('/devices')
   .get(Auth.isAuthenticated, Device.getAllDevices);
 
-router.route('/devices/test') // takes created as query param if needed
-  .get(Auth.isAuthenticated, Device.testDevice);
 
+
+
+/*** Team resource ****/
+
+router.route('/teams') // takes created as query param if needed
+  .post(Auth.isAuthenticated, Team.add)
+  .get(Auth.isAuthenticated, Team.getAll);
+
+
+router.route('/teams/:id') // takes created as query param if needed
+  .get(Auth.isAuthenticated, Team.getOne)
+  //.put(Auth.isAuthenticated, Team.edit)
+  .delete(Auth.isAuthenticated, Team.deleteOne)
+
+
+/********** Player resource *******/
+
+router.route('/players') // takes created as query param if needed
+  .post(Auth.isAuthenticated, Player.add)
+  .get(Auth.isAuthenticated, Player.getAll);
+
+
+router.route('/players/:id') // takes created as query param if needed
+  .get(Auth.isAuthenticated, Player.getOne)
+  //.put(Auth.isAuthenticated, Player.edit)
+  .delete(Auth.isAuthenticated, Player.deleteOne);
+
+router.route('/teams/:teamId/players') // takes created as query param if needed
+  .post(Auth.isAuthenticated, Player.getPlayersByTeam);
 
 
 
@@ -60,7 +89,10 @@ router.route('/devices/test') // takes created as query param if needed
 
 
 router.route('/test/users/post')
-  .get(Auth.isAuthenticated, User.postUserTest);
+  .get(User.postUserTest);
+
+router.route('/devices/test') // takes created as query param if needed
+  .get(Device.testDevice);
 
 
 
