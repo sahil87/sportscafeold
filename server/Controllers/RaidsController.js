@@ -127,6 +127,24 @@ exports.add = function(req, res) {
     });
 };
 
+exports.addRealTime = function(fn) {
+    //console.log(req.body);
+    var params = req.body;
+    raidPost(params, function(err, raid) {
+        if(err) {
+            console.log(err);
+            fn(err, false);
+        } else {
+            if(raid) {
+                fn(false, raid);
+            } else {
+                fn(false, false);
+            }
+            
+        }
+    });
+};
+
 
 
 /**

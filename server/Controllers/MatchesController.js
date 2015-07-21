@@ -9,6 +9,8 @@ async = require('async'),
 /** Load models **/
 var Match  = require('../Models/Match'),
     Result  = require('../Models/MatchResult'),
+    Team  = require('../Models/Team'),
+    Player  = require('../Models/TeamPlayer'),
     Raid  = require('../Models/Raid');
 
 function logError(err, lineNum){
@@ -42,19 +44,56 @@ function getArrayOfMatches(params, skip, limit, fn) {
 
 function getMatchData(params, fn) {
     Match.findOne(params)
-        .lean()
-        .exec(function(err, match) {
-            if(err) {
-               logError(err, 48);
-                fn(err, false);
-            } else {
-                if(!match) {
-                    fn(false, false);
+         .populate({
+            path: '_teamA'
+          }) 
+         .populate({
+            path: '_teamB'
+          })  
+         .lean()
+         .exec(function(err, match) {
+                if(err) {
+                    logError(err, 214);
+                    fn(err, false);
                 } else {
-                    fn(false, match);                                             
+                    if(match) {
+                        if(match._teamA) {
+                            console.log('hello');
+                            Player.find({ _teamId: match._teamA._id})
+                                  .lean()
+                                  .exec(function(err, playerOfTeamA) {
+                                        if(err) {
+                                            logError(err, 222);
+                                            fn(err, false);
+                                        } else {
+                                            match._teamA.players = playerOfTeamA;
+                                            if(match._teamB) {
+                                                Player.find({ _teamId: match._teamB._id})
+                                                      .lean()
+                                                      .exec(function(err, playerOfTeamB) {
+                                                            if(err) {
+                                                                logError(err, 230);
+                                                                fn(err, false);
+                                                            } else {
+                                                                match._teamB.players = playerOfTeamB;
+                                                                fn(false, match);
+                                                            }
+                                                      });
+                                            } else {
+                                                fn(false, match);
+                                            }
+                                        }
+                                  });
+                        } else {
+                            fn(false, match);
+                        }
+
+                    } else {
+                        fn(false, false);
+                    }
                 }
-            }
-        });
+
+         });
 }
 
 
@@ -198,4 +237,8 @@ exports.deleteOne = function(req, res) {
             res.json({ message: 'Match is deleted!' });
         }
     });
+}
+
+exports.getMatchDataRealTime = function(matchId, fn) {
+
 }
