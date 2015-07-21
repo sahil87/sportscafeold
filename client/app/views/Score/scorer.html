@@ -1,17 +1,17 @@
 <!-- For raid by raid info -->
 <form name="raidInputFrm">
-<div class="col-md-8 col-xs-12">
+<div class="col-md-8 col-xs-12" ng-if="match != null">
 
 
   <h2>Raid by raid info</h2>
   <table class="table table-hover">
     <tr>
       <th>Raid No:</th>
-      <td>1</td>
+      <td>{{gameData.raidNo}}</td>
     </tr>
     <tr>
       <th>Raiding team:</th>
-      <td>Jaipur Pink Panthers</td>
+      <td>{{gameData.raider.teamTitle}}</td>
     </tr>
     <tr>
       <th>Event:</th>
@@ -23,9 +23,9 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li><a href="#">Empty Raid</a></li>
-            <li><a href="#">Successful Raid</a></li>
-            <li><a href="#">Successful Tackle</a></li>
+            <li ng-repeat="event in events track by event._id">
+              <a href="javascript:void(0)" ng-click="setEvent(event)">{{event.name}}</a>
+            </li>
           </ul>
         </div>
       </td>
@@ -38,80 +38,28 @@
     <div class="col-md-6 col-xs-12">
       <table class="table table-condensed">
         <tr>
-          <th>Dabang Delhi - Raiding Team</th>
+          <th>{{gameData.raider.teamTitle}} - Raiding Team</th>
           <th>Raider?</th>
         </tr>
-        <tr>
-          <td class="text-center">Amit Singh</td>
-          <td><button type="button" class="btn btn-block btn-default">R</button></td>
+        <tr ng-repeat="player in gameData.raider.players track by player._id">
+          <td class="text-center">{{player | displayPlayerName}}</td>
+          <td><button type="button" class="btn btn-block btn-default" ng-click="setRaider(player)">R</button></td>
         </tr>
-        <tr>
-          <td class="text-center">Dadaso Balaso Awad</td>
-          <td><button type="button" class="btn btn-block btn-default">R</button></td>
-        </tr>
-        <tr>
-          <td class="text-center">Jasmer Singh</td>
-          <td><button type="button" class="btn btn-block btn-default">R</button></td>
-        </tr>
-        <tr>
-          <td class="text-center">Kashling Adake</td>
-          <td><button type="button" class="btn btn-block btn-default">R</button></td>
-        </tr>
-        <tr>
-          <td class="text-center">Punit Kumar Teotia</td>
-          <td><button type="button" class="btn btn-block btn-default">R</button></td>
-        </tr>
-        <tr>
-          <td class="text-center">Shrikant Tewthia</td>
-          <td><button type="button" class="btn btn-block btn-default">R</button></td>
-        </tr>
-        <tr>
-          <td class="text-center">Surjeet Narwal</td>
-          <td><button type="button" class="btn btn-block btn-default">R</button></td>
-        </tr>
+
       </table>
     </div>
     <div class="col-md-6 col-xs-12">
       <table class="table table-condensed">
         <tr>
-          <th>Bengaluru Bulls-Defenders</th>
+          <th>{{gameData.defender.teamTitle}} -Defenders</th>
           <th>Touch</th><th>Tackled</th>
         </tr>
-        <tr>
-          <td class="text-center">Ajay Thakur</td>
-          <td><button type="button" class="btn btn-block btn-default">T</button></td>
-          <td><button type="button" class="btn btn-block btn-default">Tck</button></td>
+        <tr ng-repeat="player in gameData.defender.players track by player._id">
+          <td class="text-center">{{player | displayPlayerName}}</td>
+          <td><button type="button" class="btn btn-block btn-default" ng-click="setTouch(player)">T</button></td>
+          <td><button type="button" class="btn btn-block btn-default" ng-click="setTackle(player)">Tck</button></td>
         </tr>
-        <tr>
-          <td class="text-center">Dharmaraj Cheralathan</td>
-          <td><button type="button" class="btn btn-block btn-default">T</button></td>
-          <td><button type="button" class="btn btn-block btn-default">Tck</button></td>
-        </tr>
-        <tr>
-          <td class="text-center">Gurpreet Singh</td>
-          <td><button type="button" class="btn btn-block btn-default">T</button></td>
-          <td><button type="button" class="btn btn-block btn-default">Tck</button></td>
-        </tr>
-        <tr>
-          <td class="text-center">Manjit Chillar</td>
-          <td><button type="button" class="btn btn-block btn-default">T</button></td>
-          <td><button type="button" class="btn btn-block btn-default">Tck</button></td>
-        </tr>
-        <tr>
-          <td class="text-center">Parmod Singh</td>
-          <td><button type="button" class="btn btn-block btn-default">T</button></td>
-          <td><button type="button" class="btn btn-block btn-default">Tck</button></td>
-        </tr>
-        <tr>
-          <td class="text-center">Rajesh Mandal</td>
-          <td><button type="button" class="btn btn-block btn-default">T</button></td>
-          <td><button type="button" class="btn btn-block btn-default">Tck</button></td>
-        </tr>
-        <tr>
-          <td class="text-center">Sunil Hanumanthappa</td>
-          <td><button type="button" class="btn btn-block btn-default">T</button></td>
-          <td><button type="button" class="btn btn-block btn-default">Tck</button></td>
-        </tr>
+
         <tr><td colspan="3"><button type="button" class="active" ng-click="handleFormSubmit();">Submit Score</button></td></tr>
       </table>
     </div>

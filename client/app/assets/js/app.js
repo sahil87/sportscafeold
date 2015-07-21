@@ -7,7 +7,8 @@
       'ngResource',
       'ui.router',
       'ui.bootstrap',
-      'ngCookies'
+      'ngCookies',
+      'ngToast'
     ])
     .factory('APILogin', [function() {
       var sessionInjector = {
