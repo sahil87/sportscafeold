@@ -58,7 +58,6 @@ function getMatchData(params, fn) {
                 } else {
                     if(match) {
                         if(match._teamA) {
-                            console.log('hello');
                             Player.find({ _teamId: match._teamA._id})
                                   .lean()
                                   .exec(function(err, playerOfTeamA) {
