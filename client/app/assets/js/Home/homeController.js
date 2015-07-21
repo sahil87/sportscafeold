@@ -5,13 +5,18 @@ angular
  */
   .controller('HomeController',
   [
-    '$scope', '$rootScope', '$state', 'PubSub',
-    function($scope, $rootScope, $state, PubSub) {
+    '$scope', '$rootScope', '$state', '$stateParams', 'PubSub', 'Match',
+    function($scope, $rootScope, $state, $stateParams, PubSub, Match) {
       $scope.user = { username : ""};
       $rootScope.successMsg = false;
       $rootScope.errorMsg = false;
       $rootScope.errors = [];
       $rootScope.isScorerCss = true;
+
+      $scope.matches = Match.query();
+
+
+
 
       $scope.handleFormSubmit = function() {
           var inputObj = {

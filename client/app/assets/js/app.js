@@ -9,6 +9,17 @@
       'ui.bootstrap',
       'ngCookies'
     ])
+    .factory('APILogin', [function() {
+      var sessionInjector = {
+        request: function(config) {
+          config.headers['api_key'] = "sportscafe";
+          config.headers['api_secret'] = "sportsTMZaFam59d@F9c#V1G9UEL17)Odzcafe";
+          config.headers['Authorization'] = "Basic c3BvcnRzY2FmZTpzcG9ydHNUTVphRmFtNTlkQEY5YyNWMUc5VUVMMTcpT2R6Y2FmZQ==";
+          return config;
+        }
+      };
+      return sessionInjector;
+    }])
     //states
     .config(
     [
@@ -40,6 +51,8 @@
         $httpProvider.defaults.transformResponse.push(function(responseData){
           return responseData;
         });
+
+        $httpProvider.interceptors.push('APILogin');
 
       }
     ]
