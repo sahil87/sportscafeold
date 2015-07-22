@@ -167,6 +167,29 @@ exports.add = function(req, res) {
     });
 };
 
+/**
+* Edit matches
+**/
+exports.edit = function(req, res) {
+    //console.log(req.body);
+    var params = req.body;
+    var matchId = req.params.id;
+    console.log(matchId);
+    console.log(params);
+    matchUpdate(matchId, params, function(err, match) {
+        if(err) {
+            res.status(500).json(err);
+        } else {
+            if(match) {
+                res.status(200).json(match);
+            } else {
+                res.status(204).json(null);
+            }
+            
+        }
+    });
+};
+
 
 
 /**

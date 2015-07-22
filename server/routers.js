@@ -96,7 +96,7 @@ router.route('/matches') // takes created as query param if needed
 
 router.route('/matches/:id') // takes created as query param if needed
   .get(Match.getOne)
-  //.put(Auth.isAuthenticated, Match.edit)
+  .put(Auth.isAuthenticated, Match.edit)
   .delete(Auth.isAuthenticated, Match.deleteOne);
 
 /************ Raid resource ****************/

@@ -5,7 +5,7 @@ angular.module('app')
     return {
       //submit data
       submitData:function (name, dataObj, cb){
-        socket.emit(name,JSON.stringify(dataObj));
+        socket.emit(name,dataObj);
       },
 
 

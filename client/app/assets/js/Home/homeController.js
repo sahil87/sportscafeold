@@ -141,14 +141,22 @@ angular
             $scope.gameData.touches = [];
             //$scope.gameData._tackledBy = [];
           }
-
+          console.log($scope.gameData.event);
+          $scope.gameData.raidResult = 'ER';
+          if($scope.gameData.event == 2) {
+             $scope.gameData.raidResult = 'SR';
+          }
+          if($scope.gameData.event == 3) {
+             $scope.gameData.raidResult = 'ST';
+          }
           var inputObj = {
             _matchId: "55ad4e19b6c83bce21524621",
+            raidResult: $scope.gameData.raidResult,
             _raiderTeam: $scope.gameData.raider._id,
             _raiderId: $scope.gameData._raiderId,
             touches: $scope.gameData.touches,
             _tackledBy: $scope.gameData._tackledBy,
-            _dataEntryPerson: "123456"
+            _dataEntryPerson: "559f732811c8a50e1456913d"
           };
           PubSub.submitData('submitResult', inputObj, onMatchResultCreate);
 
