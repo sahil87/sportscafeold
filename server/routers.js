@@ -103,7 +103,8 @@ router.route('/matches/:id') // takes created as query param if needed
 
 router.route('/raids') // takes created as query param if needed
   .post(Auth.isAuthenticated, Raid.add)
-  .get(Auth.isAuthenticated, Raid.getAll);
+  .get(Auth.isAuthenticated, Raid.getAll)
+  .delete(Auth.isAuthenticated, Raid.deleteAll);
 
 
 router.route('/raids/:id') // takes created as query param if needed

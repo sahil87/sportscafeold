@@ -94,6 +94,17 @@ function raidUpdate(raidId, params, fn){
 
 }
 
+function removeRaid(params, fn) {
+    Raid.remove(params).exec(function(err) {
+        if(err) {
+            logError(err, 193);
+            fn(err);
+        } else {
+            fn();
+        }
+    });
+}
+
 
 /**************************************************************************************************************************************
 
@@ -127,10 +138,6 @@ exports.add = function(req, res) {
     });
 };
 
-
-
-
-
 /**
 * Get all raids
 **/
@@ -159,6 +166,20 @@ exports.getAll = function(req, res) {
         }
     });
 };
+
+/**
+* Delete all
+*/
+exports.deleteAll = function(req, res) {
+    var params = {};
+    removeRaid(params, function(err) {
+        if(err) {
+            res.status(500).json(err);
+        } else {
+            res.status(200).json({ message: "Raid are deleted" });
+        }
+    });
+}
 
 /**
 * Get a single raid by id
@@ -211,12 +232,12 @@ exports.getRaidsByMatch = function(req, res) {
 exports.deleteOne = function(req, res) {
     var raidId = req.params.id;
 
-    Raid.remove({ _id: raidId }).exec(function(err) {
+    var params = { _id: raidId };
+    removeRaid(params, function(err) {
         if(err) {
-            logError(err, 193);
             res.status(500).json(err);
         } else {
-            res.json({ message: 'Raid is deleted!' });
+            res.status(200).json({ message: "Raid deleted" });
         }
-    });
+    })
 }
