@@ -147,6 +147,7 @@ angular
           
           var inputObj = {
               _matchId: "55ad4e19b6c83bce21524621",
+              raidNum: $scope.gameData.raidNo,
               raidResult: $scope.gameData.raidResult,
               _raiderTeam: $scope.gameData.raider._id,
               _raiderId: $scope.gameData._raiderId,
