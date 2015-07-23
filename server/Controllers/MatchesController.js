@@ -18,85 +18,6 @@ function logError(err, lineNum){
     console.error(err);
 }
 
-
-function getArrayOfMatches(params, skip, limit, fn) {
-    var options = {};
-    if(params) {
-        options = params;
-    }
-    Match.find(options)
-        .lean()
-        .skip(skip)
-        .limit(limit)
-        .exec(function(err, matches) { 
-            if (err) {
-                logError(err, 31);
-                fn(err, false);
-            } else {
-                if(matches && matches.length) {
-                    fn(false, matches);
-                } else {
-                    fn(false, false);
-                }
-            }
-        });
-}
-
-function getMatchData(params, fn) {
-    Match.findOne(params)
-         .populate({
-            path: '_teamA'
-          }) 
-         .populate({
-            path: '_teamB'
-          })  
-         .lean()
-         .exec(function(err, match) {
-                if(err) {
-                    logError(err, 214);
-                    fn(err, false);
-                } else {
-                    if(match) {
-                        if(match._teamA) {
-                            Player.find({ _teamId: match._teamA._id})
-                                  .lean()
-                                  .exec(function(err, playerOfTeamA) {
-                                        if(err) {
-                                            logError(err, 222);
-                                            fn(err, false);
-                                        } else {
-                                            match._teamA.players = playerOfTeamA;
-                                            if(match._teamB) {
-                                                Player.find({ _teamId: match._teamB._id})
-                                                      .lean()
-                                                      .exec(function(err, playerOfTeamB) {
-                                                            if(err) {
-                                                                logError(err, 230);
-                                                                fn(err, false);
-                                                            } else {
-                                                                match._teamB.players = playerOfTeamB;
-                                                                fn(false, match);
-                                                            }
-                                                      });
-                                            } else {
-                                                fn(false, match);
-                                            }
-                                        }
-                                  });
-                        } else {
-                            fn(false, match);
-                        }
-
-                    } else {
-                        fn(false, false);
-                    }
-                }
-
-         });
-}
-
-
-
 /**
 * Match post
 */
@@ -207,7 +128,7 @@ exports.getAll = function(req, res) {
         limit = req.query.limit;
     }
     var params = false;
-    getArrayOfMatches(params, skip, limit, function(err, matches){
+    Match.getArrayOfMatches(params, skip, limit, function(err, matches){
         if (err) {
             res.status(500).json(err);
         } else {
@@ -227,7 +148,7 @@ exports.getOne = function(req, res) {
 
     var matchId = req.params.id;
     var params = { _id: matchId };
-    getMatchData(params, function(err, match) {
+    Match.getMatchData(params, function(err, match) {
         if(err) {
             res.status(500).json(err);
         } else {

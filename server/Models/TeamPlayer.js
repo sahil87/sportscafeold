@@ -63,4 +63,21 @@ PlayerSchema.statics.insert = function(params, callback) {
     });
 
 };
+
+PlayerSchema.statics.getPlayerList = function(params, fn) {
+    this.find(params)
+        .lean()
+        .exec(function(err, players) {
+            if(err) {
+                console.log("Problem in Player Model Line 72");
+                console.error(err);
+                fn(err, false);
+            } else {
+                //console.log('Players');
+                fn(false, players);
+            }
+        });
+
+};
+
 module.exports = mongoose.model('Player', PlayerSchema);

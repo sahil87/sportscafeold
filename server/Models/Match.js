@@ -12,6 +12,7 @@ var mongoose = require('mongoose'),
 //var relative tables
 
 var Result = require('./MatchResult'),
+    Player = require('./TeamPlayer'),
     Raid = require('./Raid');
 
 var MatchSchema = new Schema({
@@ -72,8 +73,87 @@ MatchSchema.statics.insert = function(params, callback) {
             callback(false, match)
 
         }
-
     });
-
 };
+
+MatchSchema.statics.getArrayOfMatches = function(params, skip, limit, fn) {
+    var options = {};
+    if(params) {
+        options = params;
+    }
+    this.find(options)
+        .lean()
+        .skip(skip)
+        .limit(limit)
+        .exec(function(err, matches) { 
+            if (err) {
+                console.log("Problem in Match Model Line 91");
+                console.error(err);
+                fn(err, false);
+            } else {
+                if(matches && matches.length) {
+                    fn(false, matches);
+                } else {
+                    fn(false, false);
+                }
+            }
+        });
+}
+
+MatchSchema.statics.getMatchData = function(params, fn) {
+    this.findOne(params)
+         .populate({
+            path: '_teamA'
+          }) 
+         .populate({
+            path: '_teamB'
+          })  
+         .lean()
+         .exec(function(err, match) {
+                if(err) {
+                    logError(err, 214);
+                    fn(err, false);
+                } else {
+                    if(match) {
+                        if(match._teamA) {
+                            var firstParam = { _teamId: match._teamA._id};
+                            Player.getPlayerList(firstParam, function(err, playersOfTeamA) {
+                                if(err) {
+                                    fn(err, false);
+                                } else {
+                                    match._teamA.players = playersOfTeamA;
+                                    if(match._teamB) {
+                                        var secondParam = { _teamId: match._teamB._id};
+                                        Player.getPlayerList(secondParam, function(err, playersOfTeamB) {
+                                            if(err) {
+                                                fn(err, false);
+                                            } else {
+                                                match._teamB.players = playersOfTeamB;
+                                                var raidParam = { _matchId: match._id};
+                                                //console.log(raidParam);
+                                                Raid.getLastRaid(raidParam, function(err, lastRaid) {
+                                                    if(err) {
+                                                        fn(err, false);
+                                                    } else {
+                                                        if(lastRaid) {
+                                                            match.lastRaid = lastRaid;
+                                                        }                                                        
+                                                        fn(false, match);
+                                                    }
+                                                });                                                
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        } else {
+                            fn(false, match);
+                        }
+                    } else {
+                        fn(false, false);
+                    }
+                }
+
+         });
+}
 module.exports = mongoose.model('Match', MatchSchema);

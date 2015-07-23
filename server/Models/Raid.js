@@ -13,7 +13,7 @@ var mongoose = require('mongoose'),
 
 var RaidSchema = new Schema({
     raidNum: {
-        type: Integer,
+        type: Number,
         required: true
     },
     _matchId: {
@@ -80,6 +80,22 @@ RaidSchema.statics.insert = function(params, callback) {
         }
 
     });
+
+};
+
+RaidSchema.statics.getLastRaid = function(params, fn) {
+    this.findOne(params)
+        .lean()
+        .sort('-created')
+        .exec(function(err, lastRaid) {
+            if(err) {
+                console.log("Problem in Player Model Line 72");
+                console.error(err);
+                fn(err, false);
+            } else {
+                fn(false, lastRaid);
+            }
+        });
 
 };
 module.exports = mongoose.model('Raid', RaidSchema);
