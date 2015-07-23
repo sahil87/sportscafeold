@@ -100,7 +100,7 @@ MatchSchema.statics.getArrayOfMatches = function(params, skip, limit, fn) {
         });
 }
 
-MatchSchema.statics.getMatchData = function(params, fn) {
+MatchSchema.statics.getMatchData = function(params, getLastRaid, fn) {
     this.findOne(params)
          .populate({
             path: '_teamA'
@@ -137,16 +137,30 @@ MatchSchema.statics.getMatchData = function(params, fn) {
                                                 
                                                 var raidParam = { _matchId: match._id};
                                                 //console.log(raidParam);
-                                                Raid.getLastRaid(raidParam, function(err, lastRaid) {
-                                                    if(err) {
-                                                        fn(err, false);
-                                                    } else {
-                                                        if(lastRaid) {
-                                                            match.lastRaid = lastRaid;
-                                                        }                                                        
-                                                        fn(false, match);
-                                                    }
-                                                });                                                
+                                                if(getLastRaid) {
+                                                    Raid.getLastRaid(raidParam, function(err, lastRaid) {
+                                                        if(err) {
+                                                            fn(err, false);
+                                                        } else {
+                                                            if(lastRaid) {
+                                                                match.lastRaid = lastRaid;
+                                                            }                                                        
+                                                            fn(false, match);
+                                                        }
+                                                    }); 
+                                                } else {
+                                                    Raid.getAllRaid(raidParam, function(err, raids) {
+                                                        if(err) {
+                                                            fn(err, false);
+                                                        } else {
+                                                            if(raids && raids.length) {
+                                                                match.raids = raids;
+                                                            }                                                        
+                                                            fn(false, match);
+                                                        }
+                                                    }); 
+                                                }
+                                                                                               
                                             }
                                         });
                                     }

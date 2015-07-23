@@ -98,4 +98,20 @@ RaidSchema.statics.getLastRaid = function(params, fn) {
         });
 
 };
+
+RaidSchema.statics.getAllRaid = function(params, fn) {
+    this.find(params)
+        .lean()
+        .sort('-created')
+        .exec(function(err, raids) {
+            if(err) {
+                console.log("Problem in Player Model Line 108");
+                console.error(err);
+                fn(err, false);
+            } else {
+                fn(false, raids);
+            }
+        });
+
+};
 module.exports = mongoose.model('Raid', RaidSchema);
