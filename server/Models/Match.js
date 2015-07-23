@@ -121,14 +121,20 @@ MatchSchema.statics.getMatchData = function(params, fn) {
                                 if(err) {
                                     fn(err, false);
                                 } else {
-                                    match._teamA.players = playersOfTeamA;
+                                    if(playersOfTeamA) {
+                                        match._teamA.players = playersOfTeamA;
+                                    } 
+                                    
                                     if(match._teamB) {
                                         var secondParam = { _teamId: match._teamB._id};
                                         Player.getPlayerList(secondParam, function(err, playersOfTeamB) {
                                             if(err) {
                                                 fn(err, false);
                                             } else {
-                                                match._teamB.players = playersOfTeamB;
+                                                if(playersOfTeamB) {
+                                                    match._teamB.players = playersOfTeamB;
+                                                }  
+                                                
                                                 var raidParam = { _matchId: match._id};
                                                 //console.log(raidParam);
                                                 Raid.getLastRaid(raidParam, function(err, lastRaid) {
