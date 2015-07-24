@@ -4,20 +4,20 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" ng-if="match != null">
   <div class="col-md-8">
 
     <div class="row">
       <div class="col-md-4">
-        <h3>Bombay</h3>
+        <h3 ng-if="match._teamA != undefined">{{match._teamA.teamTitle}}</h3>
       </div>
 
       <div class="col-md-4">
-        <h3>30-15</h3>
+        <h3>{{score._teamA}}-{{score._teamB}}</h3>
 
       </div>
       <div class="col-md-4">
-        <h3>Jaipur</h3>
+        <h3 ng-if="match._teamB != undefined">{{match._teamB.teamTitle}}</h3>
 
       </div>
     </div>
@@ -75,62 +75,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>anup kumar</td>
+          <tr ng-repeat="player in match._teamA.players track by $index">
+            <td>{{player | displayPlayerName}}</td>
             <td>9 1</td>
             <td>3 2</td>
-            <td>maninder singh</td>
+            <td><span ng-if="match._teamB.players[$index] != undefined">{{match._teamB.players[$index]  | displayPlayerName}}</span></td>
 
           </tr>
-          <tr>
-            <td>suresh</td>
-            <td>3 1</td>
-            <td>2 2</td>
-            <td>Navneet
 
-          </tr>
-          <tr>
-            <td>anup kumar</td>
-            <td>9 1</td>
-            <td>3 2</td>
-            <td>maninder singh</td>
-
-          </tr>
-          <tr>
-            <td>suresh</td>
-            <td>3 1</td>
-            <td>2 2</td>
-            <td>Navneet
-
-          </tr>
-          <tr>
-            <td>anup kumar</td>
-            <td>9 1</td>
-            <td>3 2</td>
-            <td>maninder singh</td>
-
-          </tr>
-          <tr>
-            <td>suresh</td>
-            <td>3 1</td>
-            <td>2 2</td>
-            <td>Navneet
-
-          </tr>
-          <tr>
-            <td>anup kumar</td>
-            <td>9 1</td>
-            <td>3 2</td>
-            <td>maninder singh</td>
-
-          </tr>
-          <tr>
-            <td>suresh</td>
-            <td>3 1</td>
-            <td>2 2</td>
-            <td>Navneet
-
-          </tr>
 
         </tbody>
       </table>

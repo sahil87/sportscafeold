@@ -17,7 +17,7 @@ angular
 
       $scope.match = null;
 
-      $scope.events = [{_id: 1, name: 'Empty Raid'}, {_id: 2, name: 'Successful Raid'}, {_id: 3, name: 'Successful Tackle'}];
+      $scope.events = [{_id: 1, name: 'Empty Raid', code: 'ER'}, {_id: 2, name: 'Successful Raid', code: 'SR'}, {_id: 3, name: 'Successful Tackle', code: 'ST'}];
 
       //game object
       $scope.gameData = {
@@ -68,16 +68,6 @@ angular
 
       //set raider
       $scope.setRaider = function(player){
-          if($scope.gameData.event == null){
-            console.log("No event");
-            ngToast.create({
-              className: 'warning',
-              content: '<a href="#" class="">Select an event!</a>',
-              dismissOnTimeout: true,
-              timeout: 4000,
-              dismissButton: true
-            });
-          }
 
           $scope.gameData.raiderPlayer = player;
           $scope.gameData._raiderId = player._id;
@@ -85,81 +75,103 @@ angular
 
       //set touche
       $scope.setTouch = function(player){
-          if($scope.gameData.event == null){
-            console.log("No event");
+          if($scope.gameData._raiderId == null){
+            console.log("No raider");
             ngToast.create({
               className: 'warning',
-              content: '<a href="#" class="">Select an event!</a>',
+              content: 'Select a raider!',
               dismissOnTimeout: true,
               timeout: 4000,
               dismissButton: true
             });
+          } else {
+            if($scope.gameData.touches.indexOf(player._id) == -1){
+              $scope.gameData.touches.push(player._id);
+            }
+
           }
-          $scope.gameData.touches.push(player._id);
+
       };
 
       //set touche
       $scope.setTackle = function(player){
-          $scope.gameData._tackledBy.push(player._id);
+          if($scope.gameData._raiderId == null){
+            console.log("No raider");
+            ngToast.create({
+              className: 'warning',
+              content: 'Select a raider!',
+              dismissOnTimeout: true,
+              timeout: 4000,
+              dismissButton: true
+            });
+          } else {
+            $scope.gameData.touches = [];
+            if($scope.gameData._tackledBy.indexOf(player._id) == -1){
+              $scope.gameData._tackledBy.push(player._id);
+            }
+
+          }
+
       };
 
       //handle submit
       $scope.handleFormSubmit = function() {
           console.log($scope.gameData);
-          if($scope.gameData.event == null){
-            console.log("No event");
-            ngToast.create({
-              className: 'warning',
-              content: '<a href="#" class="">Select an event!</a>',
-              dismissOnTimeout: true,
-              timeout: 4000,
-              dismissButton: true
-            });
-            return;
-          }
-          if($scope.gameData._raiderId == null){
-            console.log("No event");
-            ngToast.create({
-              className: 'warning',
-              content: '<a href="#" class="">Select raider!</a>',
-              dismissOnTimeout: true,
-              timeout: 4000,
-              dismissButton: true
-            });
-            return;
-          }
+          var touches = {};
+          var _tackledBy = {};
 
-          if($scope.gameData.event._id == 1){
+          if($scope.gameData._raiderId == null){
+            console.log("No raider");
+            ngToast.create({
+              className: 'warning',
+              content: 'Select raider!',
+              dismissOnTimeout: true,
+              timeout: 4000,
+              dismissButton: true
+            });
+          } else {
+            if($scope.gameData._tackledBy.length){
               $scope.gameData.touches = [];
-              $scope.gameData._tackledBy = "";
-              $scope.gameData.raidResult = 'ER';
-          }
-          if($scope.gameData.event._id == 2){
-              //$scope.gameData.touches = [];
+              touches = {};
+              _tackledBy = $scope.gameData._tackledBy;
+              $scope.gameData.raidResult = 'ST';
+            } else if($scope.gameData.touches.length){
+              _tackledBy = {};
               $scope.gameData._tackledBy = "";
               $scope.gameData.raidResult = 'SR';
-          }
-          if($scope.gameData.event._id == 3){
-              $scope.gameData.touches = [];
-              //$scope.gameData._tackledBy = [];
-              $scope.gameData.raidResult = 'ST';
-          }
-          
-          var inputObj = {
+              touches = $scope.gameData.touches;
+            } else {
+              touches = {};
+              _tackledBy = {};
+              $scope.gameData.raidResult = 'ER';
+            }
+
+            var inputObj = {
               _matchId: "55ad4e19b6c83bce21524621",
               raidNum: $scope.gameData.raidNo,
               raidResult: $scope.gameData.raidResult,
               _raiderTeam: $scope.gameData.raider._id,
               _raiderId: $scope.gameData._raiderId,
-              touches: $scope.gameData.touches,
-              _tackledBy: $scope.gameData._tackledBy,
+              touches: touches,
+              _tackledBy: _tackledBy,
               _dataEntryPerson: "559f732811c8a50e1456913d"
-          };
-          PubSub.submitData('submitResult', inputObj, onMatchResultCreate);
+            };
+            PubSub.submitData('submitResult', inputObj, onMatchResultCreate);
+
+            ngToast.create({
+              className: 'info',
+              content: 'Score have been submitted successfully!',
+              dismissOnTimeout: true,
+              timeout: 4000,
+              dismissButton: true
+            });
 
 
 
-          $scope.nextRaid($scope.gameData.defender, $scope.gameData.raider);
+            $scope.nextRaid($scope.gameData.defender, $scope.gameData.raider);
+          }
+          
+
       };
 
       $scope.Raid;

@@ -35,7 +35,7 @@
           .state('scorer', {
             url: '/scorer',
             templateUrl: 'views/Score/scorer.html',
-            controller: 'ScorerController'
+            controller: 'HomeController'
           })
           .state('livescores', {
             url: '/livescores',

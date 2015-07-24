@@ -8,6 +8,10 @@ angular.module('app')
         socket.emit(name,dataObj);
       },
 
+      getData: function(name, callback){
+        socket.on(name, callback);
+      },
+
 
       //subscribe to a model
       subscribe: function(options, callback){
