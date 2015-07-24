@@ -148,7 +148,28 @@ exports.getOne = function(req, res) {
 
     var matchId = req.params.id;
     var params = { _id: matchId };
-    Match.getMatchData(params, function(err, match) {
+    Match.getMatchData(params, true, function(err, match) {
+        if(err) {
+            res.status(500).json(err);
+        } else {
+            if(match) {
+                res.status(200).json(match);
+            } else {
+                res.status(204).json(match);
+            }
+        }
+    });
+    
+};
+
+/**
+* Get a single match by id
+**/
+exports.getOneWithRaids = function(req, res) {
+
+    var matchId = req.params.id;
+    var params = { _id: matchId };
+    Match.getMatchData(params, false, function(err, match) {
         if(err) {
             res.status(500).json(err);
         } else {
