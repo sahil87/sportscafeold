@@ -111,7 +111,6 @@ MatchSchema.statics.getMatchData = function(params, getLastRaid, fn) {
          .lean()
          .exec(function(err, match) {
                 if(err) {
-                    logError(err, 214);
                     fn(err, false);
                 } else {
                     if(match) {
