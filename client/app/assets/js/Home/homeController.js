@@ -54,6 +54,12 @@ angular
                 $scope.match = match;
                 $scope.gameData.raider = match._teamA;
                 $scope.gameData.defender = match._teamB;
+
+                if(match.lastRaid == undefined || match.lastRaid == false){
+                  $scope.gameData.raidNo = 1;
+                } else {
+                  $scope.gameData.raidNo = match.lastRaid.raidNum +1;
+                }
                 console.log($scope.match);
             });
 
@@ -85,9 +91,17 @@ angular
               dismissButton: true
             });
           } else {
-            if($scope.gameData.touches.indexOf(player._id) == -1){
-              $scope.gameData.touches.push(player._id);
+            if($scope.gameData._tackledBy.length){
+              $scope.gameData.touches = [];
+            } else {
+              if($scope.gameData.touches.indexOf(player._id) == -1){
+                $scope.gameData.touches.push(player._id);
+              } else {
+                $scope.gameData.touches.splice($scope.gameData.touches.indexOf(player._id), 1);
+              }
             }
+
+
 
           }
 
@@ -108,7 +122,10 @@ angular
             $scope.gameData.touches = [];
             if($scope.gameData._tackledBy.indexOf(player._id) == -1){
               $scope.gameData._tackledBy.push(player._id);
+            } else {
+              $scope.gameData._tackledBy.splice($scope.gameData._tackledBy.indexOf(player._id), 1);
             }
+
 
           }
 

@@ -42,7 +42,7 @@
         </tr>
         <tr ng-repeat="player in gameData.raider.players track by player._id">
           <td class="text-center">{{player | displayPlayerName}}</td>
-          <td><button type="button" class="btn btn-block btn-default" ng-click="setRaider(player)">R</button></td>
+          <td><button type="button" class="btn btn-block btn-default" ng-class="{'btn-success': gameData._raiderId == player._id}" ng-click="setRaider(player)">R</button></td>
         </tr>
 
       </table>
@@ -55,8 +55,8 @@
         </tr>
         <tr ng-repeat="player in gameData.defender.players track by player._id">
           <td class="text-center">{{player | displayPlayerName}}</td>
-          <td><button type="button" class="btn btn-block btn-default" ng-click="setTouch(player)">T</button></td>
-          <td><button type="button" class="btn btn-block btn-default" ng-click="setTackle(player)">Tck</button></td>
+          <td><button type="button" class="btn btn-block btn-default" ng-class="{'btn-success': gameData.touches.indexOf(player._id) != -1}" ng-click="setTouch(player)">T</button></td>
+          <td><button type="button" class="btn btn-block btn-default" ng-class="{'btn-success': gameData._tackledBy.indexOf(player._id) != -1}" ng-click="setTackle(player)">Tck</button></td>
         </tr>
 
         <tr><td colspan="3"><button type="button" class="active" ng-click="handleFormSubmit();">Submit Score</button></td></tr>
